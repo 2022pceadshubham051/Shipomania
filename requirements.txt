@@ -5,14 +5,15 @@ python-telegram-bot==20.7
 aiohttp
 asyncio
 
-# Database
-sqlite3-binary  # SQLite support for some platforms
+# Web Framework (for webhook / API)
+Flask
+gunicorn
 
 # Utilities
 requests
 pytz
-python-dotenv
 urllib3
+python-dotenv
 
 # Data Handling
 pandas
@@ -23,11 +24,7 @@ json5
 rich
 colorama
 
-# Web Framework (optional for webhook mode)
-Flask
-gunicorn
-
-# Image/GIF Handling (used for sending GIFs or media)
+# Image/GIF Handling
 Pillow
 
 # Optional Enhancements
