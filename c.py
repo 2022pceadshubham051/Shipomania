@@ -64,7 +64,7 @@ def init_database():
         join_time INTEGER DEFAULT 120,
         operation_time INTEGER DEFAULT 120,
         min_players INTEGER DEFAULT 2,
-        max_players INTEGER DEFAULT 10,
+        max_players INTEGER DEFAULT 20,
         allow_spectators INTEGER DEFAULT 1
     )''')
 
@@ -134,10 +134,10 @@ GIFS = {
 
 # ======================== GAME CONSTANTS ========================
 HP_START = 100
-ATTACK_DAMAGE = (10, 25)
+ATTACK_DAMAGE = (20, 25)
 HEAL_AMOUNT = (8, 16)
 LOOT_HP = (1,4 )
-DEFEND_REDUCTION = 0.4
+DEFEND_REDUCTION = 0.5
 CRIT_CHANCE = 0.20
 CRIT_MULTIPLIER = 1.5
 AFK_TURNS_LIMIT = 3
@@ -3243,4 +3243,5 @@ def main():
         logger.error(f"Bot startup error: {e}")
 
 if __name__ == '__main__':
+
     main()
