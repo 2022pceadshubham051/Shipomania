@@ -1,0 +1,36 @@
+# Telegram Bot Core
+python-telegram-bot==20.7
+
+# Async Support
+aiohttp
+asyncio
+
+# Database
+sqlite3-binary  # SQLite support for some platforms
+
+# Utilities
+requests
+pytz
+python-dotenv
+urllib3
+
+# Data Handling
+pandas
+numpy
+json5
+
+# Logging & Debugging
+rich
+colorama
+
+# Web Framework (optional for webhook mode)
+Flask
+gunicorn
+
+# Image/GIF Handling (used for sending GIFs or media)
+Pillow
+
+# Optional Enhancements
+certifi
+idna
+charset-normalizer
