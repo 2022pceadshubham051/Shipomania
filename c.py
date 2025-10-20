@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 BOT_TOKEN = '8318859222:AAHQAINsicVy2I6Glu6Hj_d57pIIghGUnUU'
 ADMIN_IDS = [7460266461, 7379484662, 8049934625]
 SUPPORTIVE_GROUP_ID = -1002707382739
+SUPPORTIVE_GROUP1_ID = -1003162937388
 DEVELOPER_ID = 7460266461  # Your Telegram ID
 
 # Anti-spam configuration
@@ -873,7 +874,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     keyboard = [
         [
-            InlineKeyboardButton("💬 Support Group", url=f"https://t.me/c/{str(SUPPORTIVE_GROUP_ID)[4:]}/1"),
+            InlineKeyboardButton("💬 Support Group", url=f"https://t.me/c/{str(SUPPORTIVE_GROUP1_ID)[4:]}/1"),
             InlineKeyboardButton("👨‍💻 Developer", url=f"tg://user?id={DEVELOPER_ID}")
         ]
     ]
@@ -4151,3 +4152,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
