@@ -23,7 +23,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ======================== CONFIGURATION ========================
-BOT_TOKEN = '8499954180:AAE8O1Q8iukvxCxjRiQbxE4GPxNntR2HrNg'
+BOT_TOKEN = '8318859222:AAHQAINsicVy2I6Glu6Hj_d57pIIghGUnUU'
 ADMIN_IDS = [7460266461, 7379484662, 8049934625]
 SUPPORTIVE_GROUP_ID = -1002707382739
 SUPPORTIVE_GROUP1_ID = -1003162937388
@@ -5296,4 +5296,5 @@ def main():
         logger.error(f"❌ Bot startup error: {e}")
 
 if __name__ == '__main__':
+
     main()
