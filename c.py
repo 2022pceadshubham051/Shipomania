@@ -722,17 +722,17 @@ class Game:
         return True
     
     def get_map_display(self):
-        """Minimalist grid map with box layout, no numbering."""
+        """Minimalist grid map with box layout - FULLY FIXED."""
         map_data = MAPS.get(self.map_type, MAPS['classic'])
         n = self.map_size
 
         header = (
-            f"🗺️ **{map_data['name']}** – {n}x{n}\n"
+            f"🗺️ **{map_data['name']}** — {n}x{n}\n"
             f"*{map_data.get('description', '')}*\n\n"
         )
-
+ 
         lines = []
-        horizontal = "   +" + "---+" * n  # border for top/mid/bottom
+        horizontal = "   +" + "---+" * n
  
         lines.append("```")
         lines.append(horizontal)
@@ -741,47 +741,47 @@ class Game:
             for j in range(n):
                 cell_players = self.map_grid[i][j]
 
-                # decide emoji for each cell
+                # Decide emoji for each cell
                 if not cell_players:
-                    symbol = map_data['emoji']
+                    # FIXED: Use emoji key, not direct access
+                    symbol = map_data.get('emoji', '⬜')
                 else:
-                    alive_count = sum(
-                        1 for uid in cell_players if self.players.get(uid, {}).get('alive', False)
-                    )
-                    if alive_count == 0:
-                        symbol = "👻"
-                    elif alive_count == 1:
-                        uid = next(
-                            (uid for uid in cell_players if self.players[uid]['alive']),
-                            None
-                        )
-                        if uid and self.mode == 'team':
-                            symbol = "🔵" if self.players[uid]['team'] == 'alpha' else "🔴"
+                # Check alive players correctly
+                    alive_in_cell = [
+                        uid for uid in cell_players 
+                        if uid in self.players and self.players[uid].get('alive', False)
+                    ]
+                
+                    if not alive_in_cell:
+                        symbol = "💻"  # All dead
+                    elif len(alive_in_cell) == 1:
+                        uid = alive_in_cell[0]
+                    # Check team mode properly
+                        if self.mode == 'team' and uid in self.players:
+                            team = self.players[uid].get('team')
+                            symbol = "🔵" if team == 'alpha' else "🔴"
                         else:
                             symbol = "🟢"
-                    elif alive_count == 2:
+                    elif len(alive_in_cell) == 2:
                         symbol = "🟡"
                     else:
                         symbol = "🔴"
+                    
                 row_cells.append(f" {symbol} ")
 
-            # one clean row
             row_line = "   |" + "|".join(row_cells) + "|"
             lines.append(row_line)
             lines.append(horizontal)
         lines.append("```")
 
-    # legend
+    # Legend
         legend = (
-            f"\n**Legend:** {map_data['emoji']} Empty | 🟢 1 | 🟡 2 | 🔴 3+ | 👻 Dead"
+            f"\n**Legend:** {map_data.get('emoji', '⬜')} Empty | 🟢 1 | 🟡 2 | 🔴 3+ | 💻 Dead"
         )
         if self.mode == 'team':
             legend += "\n**Teams:** 🔵 Alpha | 🔴 Beta"
 
-    
         return header + "\n".join(lines) + legend
-
-
     
     def get_player_rank(self, user_id):
         """Get player's current rank."""
@@ -1351,12 +1351,12 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(help_text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
 
 async def help_callback_handler(query, context, category):
-    """Handle help category button clicks."""
+    """Handle help category button clicks - FIXED back button."""
     if category == "help_game":
         text = """
-╔══════════════════════╗
+╔═══════════════════════════╗
   🎮 GAME COMMANDS (Group Only)
-┣━━━━━━━━━━━━━━━━━━━━━━┫
+╠═══════════════════════════╣
    /creategame - Start battle
    /join - Join game
    /leave - Leave before start
@@ -1365,13 +1365,13 @@ async def help_callback_handler(query, context, category):
    /ally @user - Form alliance (Solo)
    /betray - Break alliance (Solo)
    /cancel - Leave/Cancel joining
-━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════╝
 """
     elif category == "help_info":
         text = """
-╔══════════════════════╗
+╔═══════════════════════════╗
   📊 INFO COMMANDS
-┣━━━━━━━━━━━━━━━━━━━━━━┫
+╠═══════════════════════════╣
    /stats - Game statistics (Group)
    /myhp - Your ship HP
    /inventory - Your items
@@ -1379,13 +1379,13 @@ async def help_callback_handler(query, context, category):
    /position - Map position
    /history - Game history
    /rules - Game Guide
-━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════╝
 """
     elif category == "help_global":
         text = """
-╔══════════════════════╗
+╔═══════════════════════════╗
       🏆 GLOBAL COMMANDS
-┣━━━━━━━━━━━━━━━━━━━━━━┫
+╠═══════════════════════════╣
    /mystats - Your Global Stats
    /leaderboard - Top players
    /achievements - Your badges
@@ -1393,13 +1393,13 @@ async def help_callback_handler(query, context, category):
    /tips - Strategy tips
    /daily - Claim daily coins 💰
    /shop - Buy player titles
-━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════╝
 """
     elif category == "help_settings":
         text = """
-╔══════════════════════╗
+╔═══════════════════════════╗
   ⚙️ SETTINGS & ADMIN
-┣━━━━━━━━━━━━━━━━━━━━━━┫
+╠═══════════════════════════╣
    /settings - View Group Settings (Admin)
    /setjointime <sec> - Set join time (Admin)
    /setoptime <sec> - Set operation time (Admin)
@@ -1411,7 +1411,7 @@ async def help_callback_handler(query, context, category):
    /backup
    /ban @user
    /unban @user
-━━━━━━━━━━━━━━━━━━━━━━━
+╚═══════════════════════════╝
 """
     else:
         text = "Invalid help category."
@@ -1421,10 +1421,39 @@ async def help_callback_handler(query, context, category):
     
     try:
         await query.edit_message_text(text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
+    except BadRequest as e:
+        # If message not modified or other error, answer the query
+        await query.answer("Navigation error. Try /help again.", show_alert=False)
+
+
+async def help_main_handler(query, context):
+    """Go back to the main help menu - FULLY FIXED."""
+    await query.answer()
+    
+    help_text = """
+╔═══════════════════════════╗
+     📚 COMMAND CENTER    
+╚═══════════════════════════╝
+
+*Select a category to view commands:*
+"""
+    
+    keyboard = [
+        [InlineKeyboardButton("🎮 Game Commands", callback_data="help_game")],
+        [InlineKeyboardButton("📊 Info Commands", callback_data="help_info")],
+        [InlineKeyboardButton("🏆 Global Commands", callback_data="help_global")],
+        [InlineKeyboardButton("⚙️ Settings/Admin", callback_data="help_settings")]
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    
+    try:
+        await query.edit_message_text(help_text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
     except BadRequest:
-        # If it's the main menu again, just re-send the main help.
-        if category != "help_main":
-             await query.message.reply_text(text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
+        # If editing fails (already edited or message too old), send new message
+        try:
+            await query.message.reply_text(help_text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
+        except:
+            await query.answer("Please use /help to get the menu again.", show_alert=True)
 
 async def help_main_handler(query, context):
     """Go back to the main help menu."""
@@ -1563,7 +1592,7 @@ Coordinate with your team! 🎯
         pass
 
 async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Handle all inline button callbacks."""
+    """Handle all inline button callbacks - UPDATED."""
     query = update.callback_query
     await query.answer()
     
@@ -1577,7 +1606,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     elif data.startswith('team_join_'):
         await handle_team_join(query, context)
     elif data.startswith('operation_'):
-        # Pass the original DM message ID to allow 'Back' to return to DM menu
         await handle_operation_selection(query, context)
     elif data.startswith('target_'):
         await handle_target_selection(query, context)
@@ -1589,8 +1617,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await handle_map_vote(query, context)
     elif data.startswith('help_'):
         if data == 'help_main':
-            # Re-send main help command to avoid infinite loop
-             await help_main_handler(query, context)
+            await help_main_handler(query, context)
         else:
             await help_callback_handler(query, context, data)
     elif data.startswith('shop_'):
@@ -2369,7 +2396,7 @@ async def stats_detailed_command(update: Update, context: ContextTypes.DEFAULT_T
     await update.message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
 
 async def operation_countdown(context, game):
-    """Consolidated countdown for operation selection."""
+    """Consolidated countdown for operation selection - FIXED."""
     try:
         if game._operation_countdown_running:
             return
@@ -2439,6 +2466,7 @@ async def operation_countdown(context, game):
 
             await asyncio.sleep(1)
 
+        # CRITICAL FIX: Always process day after countdown
         if game.is_active:
             await process_day_operations(context, game)
 
@@ -2496,15 +2524,40 @@ async def handle_operation_selection(query, context):
 # c.py (Changes in show_target_selection)
 
 async def show_target_selection(query, context, game, user_id, chat_id):
-    """Show available targets for attack with enhanced UI."""
+    """Show available targets for attack - FIXED no enemies message."""
     targets_in_range = game.get_players_in_range(user_id)
     
     if not targets_in_range:
-        await query.answer("No enemies in range! Move closer or choose another action.", show_alert=True)
-        # Re-send the main operation menu since attack is not possible
-        await send_operation_dm(context, game, user_id)
+        # FIXED: Send proper "no enemies" message in DM
+        text = """
+╔═══════════════════════════╗
+      ⚠️ NO TARGETS FOUND    
+╚═══════════════════════════╝
+
+❌ **No enemies within 2 block radius!**
+
+**Suggestions:**
+- 🧭 Use **Move** to get closer
+- 🛡️ Use **Defend** to stay safe
+- 💊 Use **Heal** to recover
+- 📦 Use **Loot** for items
+
+*Choose another operation!* ⚡
+"""
+        keyboard = [[InlineKeyboardButton("◀️ Back to Operations", callback_data=f"operation_back_{user_id}_{chat_id}")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        
+        try:
+            await query.edit_message_caption(caption=text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
+        except BadRequest:
+            try:
+                await query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
+            except BadRequest:
+                await query.answer("No enemies in range! Choose another action.", show_alert=True)
+        
         return
     
+    # Continue with normal target selection
     keyboard = []
     
     for target_id in targets_in_range:
@@ -2525,14 +2578,13 @@ async def show_target_selection(query, context, game, user_id, chat_id):
             )
         ])
     
-    # Back button that goes back to the main operation menu
     keyboard.append([InlineKeyboardButton("◀️ Back to Operations", callback_data=f"operation_back_{user_id}_{chat_id}")])
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     text = """
-╔══════════════════════╗
+╔═══════════════════════════╗
       🗡️ TARGET SELECTION   
-╚══════════════════════╝
+╚═══════════════════════════╝
 
 *Choose your target wisely!*
 
@@ -2545,17 +2597,14 @@ async def show_target_selection(query, context, game, user_id, chat_id):
 """
     
     try:
-        # 1. Try to edit as a GIF message caption
         await query.edit_message_caption(caption=text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
     except BadRequest:
         try:
-            # 2. If it fails (e.g., message was already edited to plain text), try to edit as text
             await query.edit_message_text(text=text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
         except BadRequest as e:
             if 'message is not modified' not in str(e):
-                 logger.error(f"Failed to edit DM message in show_target_selection: {e}")
+                logger.error(f"Failed to edit DM message in show_target_selection: {e}")
             await query.answer("Cannot update message content.", show_alert=True)
-
 
 async def show_move_selection(query, context, game, user_id, chat_id):
     """Show movement options with enhanced map."""
@@ -2766,7 +2815,7 @@ async def set_operation(query, context, game, user_id, operation, target_id, cha
     await query.answer(f"{op_names[operation]} confirmed! ⚡")
 
 async def process_day_operations(context, game):
-    """Process all operations for the day with enhanced UI."""
+    """Process all operations for the day - CRITICAL FIX."""
     await safe_send(
         context, game.chat_id,
         f"🔄 **Processing Day {game.day} Operations...** Stand by! ⚡",
@@ -2789,9 +2838,9 @@ async def process_day_operations(context, game):
         await safe_send_animation(
             context, game.chat_id, gif_url,
             caption=f"""
-╔══════════════════════╗
+╔═══════════════════════════╗
       🌌 COSMIC EVENT!     
-╚══════════════════════╝
+╚═══════════════════════════╝
 
 {event_data['emoji']} **{event_data['name']}**
 
@@ -2816,9 +2865,9 @@ Processing effects... ⚡
                     context, user_id,
                     get_random_gif('eliminated'),
                     caption=f"""
-╔══════════════════════╗
+╔═══════════════════════════╗
       ⚠️ AFK ELIMINATION   
-╚══════════════════════╝
+╚═══════════════════════════╝
 
 *Ship lost in space!*
 
@@ -2887,9 +2936,9 @@ Stay active next time! 🚀
     for target_id in attacks:
         target = game.players.get(target_id)
         if target and target['alive']:
-            if 'EMP_grenade' in target['inventory']:
-                emp_targets[target_id].append('EMP_grenade')
-                target['inventory'].remove('EMP_grenade')
+            if 'emp_grenade' in target['inventory']:
+                emp_targets[target_id].append('emp_grenade')
+                target['inventory'].remove('emp_grenade')
                 
     for target_id, attackers in attacks.items():
         if target_id not in game.players or not game.players[target_id]['alive']:
@@ -2902,7 +2951,10 @@ Stay active next time! 🚀
         
         for attacker_id in attackers:
             attacker = game.players[attacker_id]
-        
+            
+            # CRITICAL FIX: Initialize damage variable FIRST
+            damage = base_attack
+            
             # Check for speed boost (can attack twice)
             if 'speed_boost' in attacker['inventory']:
                 attacker['inventory'].remove('speed_boost')
@@ -2926,6 +2978,11 @@ Stay active next time! 🚀
             if random.random() < CRIT_CHANCE:
                 damage = int(damage * CRIT_MULTIPLIER)
                 crit_hit = True
+            
+            # Check betrayal bonus
+            if attacker_id in betrayals and betrayals[attacker_id] == target_id:
+                damage = int(damage * BETRAYAL_DAMAGE_BONUS)
+                betrayal_hit = True
             
             total_damage += damage
             attacker['stats']['damage_dealt'] += damage
@@ -2974,8 +3031,6 @@ Stay active next time! 🚀
         player = game.players[user_id]
         heal_amount = base_heal
         
-        # Energy core items do not stack with heal action (they auto-trigger on loot)
-        
         old_hp = player['hp']
         player['hp'] = min(player['max_hp'], player['hp'] + heal_amount)
         actual_heal = player['hp'] - old_hp
@@ -3003,10 +3058,12 @@ Stay active next time! 🚀
         # Special handling for energy cores (auto-heal)
         if item_data['type'] == 'energy':
             heal_amount = item_data['bonus']
-            player['hp'] += heal_amount # Allow to exceed max HP temporarily (if design allows, currently it is hard limit)
-            player['stats']['heals_done'] += heal_amount
+            old_hp = player['hp']
+            player['hp'] = min(player['max_hp'], player['hp'] + heal_amount)
+            actual_heal = player['hp'] - old_hp
+            player['stats']['heals_done'] += actual_heal
             loot_log.append(
-                f"📦 {player['first_name']} looted: {rarity_emoji} {item_data['emoji']} {new_item.replace('_', ' ').title()} (+{heal_amount} HP!)"
+                f"📦 {player['first_name']} looted: {rarity_emoji} {item_data['emoji']} {new_item.replace('_', ' ').title()} (+{actual_heal} HP!)"
             )
         else:
             player['inventory'].append(new_item)
@@ -3030,10 +3087,8 @@ Stay active next time! 🚀
             eliminated.append((user_id, player['first_name']))
             
             # Award kills
-            # Find who attacked this player in this turn
             attackers_of_this_player = [att_id for target_id, att_list in attacks.items() if target_id == user_id for att_id in att_list]
             if attackers_of_this_player:
-                # Award kill to the last person who dealt damage, or randomly/to all (simple approach: to all attackers)
                 for attacker_id in set(attackers_of_this_player):
                     game.players[attacker_id]['stats']['kills'] += 1
                     
@@ -3046,7 +3101,7 @@ Stay active next time! 🚀
                                 parse_mode=ParseMode.MARKDOWN
                             )
                     
-                    # Betrayal achievement (if betrayal led to elimination)
+                    # Betrayal achievement
                     if attacker_id in betrayals and betrayals[attacker_id] == user_id:
                         if unlock_achievement(attacker_id, 'betrayer'):
                             await safe_send(
@@ -3059,9 +3114,9 @@ Stay active next time! 🚀
                 context, user_id,
                 get_random_gif('eliminated'),
                 caption=f"""
-╔══════════════════════╗
+╔═══════════════════════════╗
       💀 ELIMINATED!       
-╚══════════════════════╝
+╚═══════════════════════════╝
 
 Your ship was destroyed on Day {game.day}!
 *Final HP: 0*
@@ -3077,9 +3132,9 @@ Your ship was destroyed on Day {game.day}!
             )
     
     # Build enhanced summary
-    summary_lines = [f"╔══════════════════════╗"]
+    summary_lines = [f"╔═══════════════════════════╗"]
     summary_lines.append(f"    📊 DAY {game.day} SUMMARY  ")
-    summary_lines.append(f"╚══════════════════════╝\n")
+    summary_lines.append(f"╚═══════════════════════════╝\n")
     
     if event_log:
         summary_lines.append(f"🌌 **Cosmic Event: {event_data['name']}**")
@@ -3088,41 +3143,41 @@ Your ship was destroyed on Day {game.day}!
         summary_lines.append("")
     
     if damage_log:
-        summary_lines.append("┏━━━━━━━━━━━━━━━━━━━━━━┓")
+        summary_lines.append("┌───────────────────────┐")
         summary_lines.append("      🗡️ ATTACKS")
-        summary_lines.append("┗━━━━━━━━━━━━━━━━━━━━━━┛")
+        summary_lines.append("└───────────────────────┘")
         for line in damage_log:
             summary_lines.append(f"• {line}")
         summary_lines.append("")
     
     if heal_log:
-        summary_lines.append("┏━━━━━━━━━━━━━━━━━━━━━━┓")
+        summary_lines.append("┌───────────────────────┐")
         summary_lines.append("      💊 REPAIRS")
-        summary_lines.append("┗━━━━━━━━━━━━━━━━━━━━━━┛")
+        summary_lines.append("└───────────────────────┘")
         for line in heal_log:
             summary_lines.append(f"• {line}")
         summary_lines.append("")
     
     if loot_log:
-        summary_lines.append("┏━━━━━━━━━━━━━━━━━━━━━━┓")
+        summary_lines.append("┌───────────────────────┐")
         summary_lines.append("      📦 SCAVENGING")
-        summary_lines.append("┗━━━━━━━━━━━━━━━━━━━━━━┛")
+        summary_lines.append("└───────────────────────┘")
         for line in loot_log:
             summary_lines.append(f"• {line}")
         summary_lines.append("")
     
     if move_log:
-        summary_lines.append("┏━━━━━━━━━━━━━━━━━━━━━━┓")
+        summary_lines.append("┌───────────────────────┐")
         summary_lines.append("      🧭 NAVIGATION")
-        summary_lines.append("┗━━━━━━━━━━━━━━━━━━━━━━┛")
+        summary_lines.append("└───────────────────────┘")
         for line in move_log:
             summary_lines.append(f"• {line}")
         summary_lines.append("")
     
     if eliminated:
-        summary_lines.append("┏━━━━━━━━━━━━━━━━━━━━━━┓")
+        summary_lines.append("┌───────────────────────┐")
         summary_lines.append("      💀 ELIMINATED")
-        summary_lines.append("┗━━━━━━━━━━━━━━━━━━━━━━┛")
+        summary_lines.append("└───────────────────────┘")
         for _, name in eliminated:
             summary_lines.append(f"• {name}")
         summary_lines.append("")
@@ -3130,16 +3185,15 @@ Your ship was destroyed on Day {game.day}!
     alive_players = game.get_alive_players()
     
     if game.mode == 'solo':
-        # Re-sort for most current ranking in summary
         sorted_players = sorted(
             [(uid, p) for uid, p in game.players.items() if p['alive']],
             key=lambda x: (x[1]['hp'], x[1]['stats']['kills']),
             reverse=True
         )
         
-        summary_lines.append(f"┏━━━━━━━━━━━━━━━━━━━━━━┓")
+        summary_lines.append(f"┌───────────────────────┐")
         summary_lines.append(f"      🚢 SURVIVORS ({len(alive_players)})")
-        summary_lines.append(f"┗━━━━━━━━━━━━━━━━━━━━━━┛")
+        summary_lines.append(f"└───────────────────────┘")
         
         for i, (user_id, player) in enumerate(sorted_players, 1):
             hp_bar = get_progress_bar(player['hp'], player['max_hp'], 5)
@@ -3151,18 +3205,18 @@ Your ship was destroyed on Day {game.day}!
         alpha_alive = game.get_alive_team_players('alpha')
         beta_alive = game.get_alive_team_players('beta')
         
-        summary_lines.append(f"┏━━━━━━━━━━━━━━━━━━━━━━┓")
+        summary_lines.append(f"┌───────────────────────┐")
         summary_lines.append(f"      🔵 TEAM ALPHA ({len(alpha_alive)} alive)")
-        summary_lines.append(f"┗━━━━━━━━━━━━━━━━━━━━━━┛")
+        summary_lines.append(f"└───────────────────────┘")
         for user_id in alpha_alive:
             player = game.players[user_id]
             hp_ind = get_hp_indicator(player['hp'], player['max_hp'])
             summary_lines.append(f"• {hp_ind} {player['first_name']} - {player['hp']} HP")
         
         summary_lines.append("")
-        summary_lines.append(f"┏━━━━━━━━━━━━━━━━━━━━━━┓")
+        summary_lines.append(f"┌───────────────────────┐")
         summary_lines.append(f"      🔴 TEAM BETA ({len(beta_alive)} alive)")
-        summary_lines.append(f"┗━━━━━━━━━━━━━━━━━━━━━━┛")
+        summary_lines.append(f"└───────────────────────┘")
         for user_id in beta_alive:
             player = game.players[user_id]
             hp_ind = get_hp_indicator(player['hp'], player['max_hp'])
@@ -3649,12 +3703,15 @@ async def betray_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ======================== COINS AND SHOP ========================
 
 async def daily_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Claim daily coins with streak system."""
+    """Claim daily coins - FULLY FIXED with proper DB update."""
     user = update.effective_user
     user_id = user.id
     
-    # Ensure player is in DB
-    update_player_stats(user_id, user.username, {})
+    # Ensure player exists in DB
+    stats = get_player_stats(user_id)
+    if not stats:
+        update_player_stats(user_id, user.username, {})
+        stats = get_player_stats(user_id)
 
     now = datetime.now()
     if user_id in LAST_DAILY_CLAIM:
@@ -3670,26 +3727,53 @@ async def daily_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
             return
 
-    # Grant coins with streak bonus
+    # Calculate coins with streak bonus
     coins_to_add = DAILY_COIN_AMOUNT
+    streak_bonus = 0
     
-    # Get current stats to check streak
-    stats = get_player_stats(user_id)
     if stats:
-        win_streak = stats[11]
-        # Streak bonus: +10 coins per win streak
-        streak_bonus = min(win_streak * 10, 100)  # Max 100 bonus
+        win_streak = stats[11] if len(stats) > 11 else 0
+        streak_bonus = min(win_streak * 10, 100)
         coins_to_add += streak_bonus
     
-    update_player_stats(user_id, user.username, {'coins': coins_to_add})
-    LAST_DAILY_CLAIM[user_id] = now
-    
-    bonus_text = f"\n🔥 **Streak Bonus:** +{streak_bonus} coins!" if stats and stats[11] > 0 else ""
-    
-    await update.message.reply_text(
-        f"✅ **Daily Reward Claimed!**\nYou received **{coins_to_add} 🪙** coins!{bonus_text}\n\nUse `/shop` to buy titles!",
-        parse_mode=ParseMode.MARKDOWN
-    )
+    # CRITICAL FIX: Direct SQL update with proper validation
+    try:
+        conn = sqlite3.connect('ship_battle.db')
+        c = conn.cursor()
+        
+        # Get current coins safely
+        c.execute('SELECT coins FROM players WHERE user_id = ?', (user_id,))
+        result = c.fetchone()
+        current_coins = 0
+        
+        if result:
+            try:
+                current_coins = int(result[0]) if result[0] else 0
+            except (ValueError, TypeError):
+                current_coins = 0
+        
+        # Update coins
+        new_balance = current_coins + coins_to_add
+        c.execute('UPDATE players SET coins = ?, last_played = ? WHERE user_id = ?', 
+                  (new_balance, datetime.now().isoformat(), user_id))
+        conn.commit()
+        conn.close()
+        
+        LAST_DAILY_CLAIM[user_id] = now
+        
+        bonus_text = f"\n🔥 **Streak Bonus:** +{streak_bonus} coins!" if streak_bonus > 0 else ""
+        
+        await update.message.reply_text(
+            f"✅ **Daily Reward Claimed!**\n"
+            f"You received **{coins_to_add} 🪙** coins!{bonus_text}\n\n"
+            f"💰 **New Balance:** {new_balance} 🪙\n\n"
+            f"Use `/shop` to buy titles!",
+            parse_mode=ParseMode.MARKDOWN
+        )
+        
+    except Exception as e:
+        logger.error(f"Daily coin update error: {e}")
+        await update.message.reply_text("❌ Error updating coins. Please try again.")
 
 async def shop_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Show the in-game shop for titles."""
