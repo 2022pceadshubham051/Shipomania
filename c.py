@@ -29,7 +29,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ======================== CONFIGURATION ========================
-BOT_TOKEN = '8499954180:AAE8O1Q8iukvxCxjRiQbxE4GPxNntR2HrNg'
+BOT_TOKEN = '8318859222:AAHQAINsicVy2I6Glu6Hj_d57pIIghGUnUU'
 ADMIN_IDS = [7460266461, 7379484662, 8049934625]
 SUPPORTIVE_GROUP_ID = -1002707382739
 SUPPORTIVE_GROUP1_ID = -1003162937388
@@ -1177,25 +1177,25 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     update_player_stats(user.id, user.username, {})
     
     welcome_text = f"""
-╔════════════════════╗
+╔═════════════════╗
       🚀 SHIP BATTLE ROYALE  
-╚════════════════════╝
+╚═════════════════╝
 
 👋 **Welcome, Captain {user.first_name}!**
 *Conquer the Stars in Epic Space Combat* 🌌
 
-┌───────────────────┐
+┌───────────────┐
 │  🎮 QUICK START
-├───────────────────┤
+├───────────────┤
    /creategame - Launch Battle
    /help - All Commands
    /rules - Game Guide
    /mystats - Your Statistics
-└───────────────────┘
+└───────────────┘
 
-┌───────────────────┐
+┌───────────────┐
 │  ⚡ EPIC FEATURES
-├───────────────────┤
+├───────────────┤
    ✅ Solo & Team Battles
    ✅ 5 Unique Battle Maps
    ✅ Alliance & Betrayal System
@@ -1205,7 +1205,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
    ✅ Global Leaderboards
    ✅ Achievement System
    ✅ Buyable Titles/Coins
-└───────────────────┘
+└──────────────┘
 
 *Ready to dominate the galaxy?* ✨
 """
@@ -1227,9 +1227,9 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     
     help_text = """
-╔═══════════════════════╗
+╔════════════════╗
      📚 COMMAND CENTER    
-╚═══════════════════════╝
+╚════════════════╝
 
 *Select a category to view commands:*
 """
@@ -1250,9 +1250,9 @@ async def help_callback_handler(query, context, category):
     
     if category == "help_game":
         text = """
-╔═════════════════════╗
+╔══════════════════╗
   🎮 GAME COMMANDS (Group Only)
-╠═════════════════════╣
+╠══════════════════╣
    /creategame - Start battle
    /join - Join game
    /leave - Leave before start
@@ -1261,13 +1261,13 @@ async def help_callback_handler(query, context, category):
    /ally @user - Form alliance (Solo)
    /betray - Break alliance (Solo)
    /cancel - Leave/Cancel joining
-╚═════════════════════╝
+╚══════════════════╝
 """
     elif category == "help_info":
         text = """
-╔═════════════════════╗
+╔══════════════════╗
   📊 INFO COMMANDS
-╠═════════════════════╣
+╠══════════════════╣
    /stats - Game statistics (Group)
    /myhp - Your ship HP
    /inventory - Your items
@@ -1275,13 +1275,13 @@ async def help_callback_handler(query, context, category):
    /position - Map position
    /history - Game history
    /rules - Game Guide
-╚═════════════════════╝
+╚═══════════════════╝
 """
     elif category == "help_global":
         text = """
-╔═════════════════════╗
+╔══════════════════╗
       🏆 GLOBAL COMMANDS
-╠═════════════════════╣
+╠══════════════════╣
    /mystats - Your Global Stats
    /leaderboard - Top players
    /achievements - Your badges
@@ -1291,13 +1291,13 @@ async def help_callback_handler(query, context, category):
    /shop - Buy player titles
    /challenges - Daily challenges
    /cosmetics - Cosmetic items
-╚═════════════════════╝
+╚══════════════════╝
 """
     elif category == "help_settings":
         text = """
-╔═════════════════════╗
+╔══════════════════╗
   ⚙️ SETTINGS & ADMIN
-╠═════════════════════╣
+╠══════════════════╣
    /settings - View Group Settings (Admin)
    /setjointime <sec> - Set join time (Admin)
    /setoptime <sec> - Set operation time (Admin)
@@ -1311,7 +1311,7 @@ async def help_callback_handler(query, context, category):
    /restore - Restore DB from JSON
    /ban @user
    /unban @user
-╚═════════════════════╝
+╚══════════════════╝
 """
     else:
         text = "Invalid help category."
@@ -1330,9 +1330,9 @@ async def help_main_handler(query, context):
     await query.answer()
     
     help_text = """
-╔═══════════════════════╗
+╔════════════════════╗
      📚 COMMAND CENTER    
-╚═══════════════════════╝
+╚════════════════════╝
 
 *Select a category to view commands:*
 """
@@ -1366,13 +1366,13 @@ async def rules_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         loot_desc += f"   {emoji} **{name}** ({rarity}): {desc}\n"
     
     rules_text = f"""
-╔═══════════════════════╗
+╔═════════════════╗
       📖 GAME RULES GUIDE   
-╚═══════════════════════╝
+╚═════════════════╝
 
 🎯 **Objective:** Be the last ship standing!
 
-┌───────────────────────┐
+┌────────────────────┐
 
 1️⃣ COMBAT & ACTIONS
    🗡️ Attack: 20-25 DMG + 20% Crit (Range: 2 cells)
@@ -1383,23 +1383,23 @@ async def rules_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
    
    ⚠️ **AFK:** Miss 3 turns = Auto-Elimination!
 
-┌───────────────────────┐
+┌────────────────────┐
 
 2️⃣ ALLIANCE SYSTEM (Solo Mode)
    • `/ally @user`: Form alliance (2 turns)
    • `/betray`: Break alliance (😈 150% damage bonus!)
 
-┌───────────────────────┐
+┌────────────────────┐
 
 3️⃣ LOOT ITEMS (Sample)
 {loot_desc}
-┌───────────────────────┐
+┌────────────────────┐
 
 4️⃣ MAPS & EVENTS
    • 5 Unique Battlefields (5x5 to 8x8)
    • Cosmic Events: Meteor Storm, Solar Boost, etc.
 
-┌───────────────────────┐
+┌────────────────────┐
 
 5️⃣ TITLES & COINS 💰
    • `/daily`: Claim daily coins
@@ -1573,9 +1573,9 @@ async def creategame_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     caption = """
-╔═══════════════════╗
+╔════════════════╗
       🚀 SHIP BATTLE ROYALE  
-╚═══════════════════╝
+╚════════════════╝
 
 *Choose your battle mode!* 🌌
 
@@ -1750,9 +1750,9 @@ async def start_map_voting(query, context, game, mode):
     )
     
     caption = f"""
-╔═══════════════════
+╔════════════════
   🗺️ MAP SELECTION     
-╚═══════════════════
+╚════════════════
 
 *Vote for your battlefield!* 🎯
 **Time:** 30 seconds
@@ -2189,9 +2189,9 @@ async def display_joining_phase(message, context, game, edit=False):
         player_list_text += "   *No players yet - Use /join to enter!*\n"
     
     join_text = f"""
-╔═══════════════════════════════════
+╔═══════════════════
       🚀 JOINING PHASE      
-╚═══════════════════════════════════
+╚═══════════════════
 
 🗺️ **Map:** {MAPS[game.map_type]['name']}
 👥 **Players ({len(game.players)}/{game.settings['max_players']}):**
@@ -2510,9 +2510,9 @@ async def send_operation_dm(context, game, user_id):
         title_data = PLAYER_TITLES.get(title_key, PLAYER_TITLES['novice_captain'])
         
         text = f"""
-╭────────────────────────────
-      🚢 YOUR FLAGSHIP     
-╰────────────────────────────
+╭────────────────
+   🚢 YOUR FLAGSHIP     
+╰─────────────────
 
 **Day {game.day}** | 🗺️ {MAPS[game.map_type]['name']}
 {title_data['emoji']} **Title:** {title_data['name']}
@@ -2522,16 +2522,16 @@ async def send_operation_dm(context, game, user_id):
 
 📍 **Position:** ({px}, {py})
 {team_text}{alliance_text}
-╭────────────────────────────
+╭──────────────────────
       ⚡ BATTLE INFO
-├────────────────────────────
+├──────────────────────
    ⚠️ AFK Count: {player['afk_turns']}/3
    ⏱️ Time: {format_time(game.settings['operation_time'])}
    👁️ Kills: {player['stats']['kills']}
-╭──────────────────────────────
+╭──────────────────────
       🎖️ YOUR ARSENAL
-├──────────────────────────────
-{inventory_text}╰──────────────────────────────────────────────
+├──────────────────────
+{inventory_text}╰──────────────────────
 
 *Choose your operation wisely!* ⚔️
 """
@@ -2613,9 +2613,9 @@ async def show_target_selection(query, context, game, user_id, chat_id):
     
     if not targets_in_range:
         text = """
-╔═════════════════════╗
+╔════════════════╗
       ⚠️ NO TARGETS FOUND    
-╚═════════════════════╝
+╚════════════════╝
 
 ❌ **No enemies within 2 block radius!**
 
@@ -2671,9 +2671,9 @@ async def show_target_selection(query, context, game, user_id, chat_id):
     reply_markup = InlineKeyboardMarkup(keyboard)
     
     text = """
-╔═══════════════════════╗
+╔══════════════════╗
       🗡️ TARGET SELECTION   
-╚═══════════════════════╝
+╚══════════════════╝
 
 *Choose your target wisely!*
 
@@ -2746,9 +2746,9 @@ async def show_move_selection(query, context, game, user_id, chat_id):
         mini_map += row.strip() + "```\n"
     
     text = f"""
-╔════════════════════╗
+╔═════════════════╗
       🧭 SHIP NAVIGATION    
-╚════════════════════╝
+╚═════════════════╝
 
 {mini_map}
 
@@ -2851,9 +2851,9 @@ async def set_operation(query, context, game, user_id, operation, target_id, cha
     ready_count = sum(1 for uid in alive_players if game.players[uid]['operation'] is not None)
     
     text = f"""
-╔════════════════════╗
+╔═════════════════╗
       ✅ OPERATION CONFIRMED 
-╚════════════════════╝
+╚═════════════════╝
 
 ⚡ **{op_names[operation]}**
 *{op_descriptions[operation]}*
@@ -2865,12 +2865,12 @@ async def set_operation(query, context, game, user_id, operation, target_id, cha
     
     remaining = int((game.operation_end_time - datetime.now()).total_seconds()) if game.operation_end_time else 0
     text += f"""
-├───────────────────────────
+├────────────────────
       📊 **STATUS**
-├───────────────────────────
+├────────────────────
    ✅ Ready: {ready_count}/{len(alive_players)}
    ⏱️ Time: {format_time(remaining)}
-└───────────────────────────
+──────────────────────
 
 *Locked in. Stars favor you!* ✨
 """
@@ -3125,16 +3125,16 @@ async def shop_command_fixed(message, context):
     title_data = PLAYER_TITLES.get(current_title_key, PLAYER_TITLES['novice_captain'])
     
     text = f"""
-╭──────────────────────────────
+╭───────────────
      🛒 TITLE SHOP        
-╰──────────────────────────────
+╰────────────────
 
 💰 **Your Balance:** {coins} 🪙
 ✨ **Current Title:** {title_data['name']}
 
-╭──────────────────────────────
+╭────────────────────
       ⭐ AVAILABLE TITLES
-├──────────────────────────────
+├────────────────────
 """
     keyboard = []
     
@@ -3165,7 +3165,7 @@ async def shop_command_fixed(message, context):
                 callback_data="shop_none"
             )])
     
-    text += "╰──────────────────────────────"
+    text += "╰─────────────────────"
     
     reply_markup = InlineKeyboardMarkup(keyboard)
     await safe_send(context, message.chat.id, text, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
@@ -3262,9 +3262,9 @@ async def achievements_command(update: Update, context: ContextTypes.DEFAULT_TYP
     achievements = get_player_achievements(user_id)
     
     text = f"""
-╔════════════════════╗
+╔══════════════════╗
       🏅 YOUR ACHIEVEMENTS   
-╚════════════════════╝
+╚══════════════════╝
 
 *Unlocked: {len(achievements)}/{len(ACHIEVEMENTS)}*
 
@@ -3292,9 +3292,9 @@ async def leaderboard_command(update: Update, context: ContextTypes.DEFAULT_TYPE
         return
     
     text = """
-╔══════════════════════╗
+╔═══════════════════╗
       🏆 GLOBAL LEADERBOARD 
-╚══════════════════════╝
+╚═══════════════════╝
 
 """
     medals = ["🥇", "🥈", "🥉"] + ["🏅"] * 7
@@ -4162,16 +4162,16 @@ async def end_game(context, game, alive_players):
                 await safe_send(context, winner_id, "🏆 **Achievement Unlocked!**\n🔥 3-Win Streak - Won 3 games in a row!", parse_mode=ParseMode.MARKDOWN)
         
         victory_text = f"""
-╭─────────────────────────
+╭─────────────────────
       🏆 VICTORY ROYALE!    
-╰─────────────────────────
+╰─────────────────────
 
 🏅 **Champion: {winner['first_name']}**
 🗺️ **Map:** {MAPS[game.map_type]['name']}
 
-├──────────────────────────
+├──────────────────
       📊 FINAL STATS
-├──────────────────────────
+├──────────────────
    ❤️ HP Left: {winner['hp']}/{winner['max_hp']}
    📍 Position: {winner['position']}
    👁️ Eliminations: {winner['stats']['kills']}
@@ -4183,7 +4183,7 @@ async def end_game(context, game, alive_players):
    ⭐ Score: +{score}
    💰 Coins Earned: +{coins_earned} 🪙
    💵 **Total Balance: {new_balance} 🪙**
-╰──────────────────────────
+╰────────────────────
 
 *Epic battle! GG everyone!* ⚡
 
