@@ -710,7 +710,7 @@ async def pin_message(context: ContextTypes.DEFAULT_TYPE, chat_id: int, message_
     except Exception as e:
         logger.error(f"❌ Unexpected error pinning message: {e}", exc_info=True)
 
-def trigger_cosmic_event() -> tuple[str , None, dict , None]:
+def trigger_cosmic_event() -> tuple[Union[str, None], Union[dict, None]]:
     """Randomly determines if a cosmic event should trigger."""
     if random.random() < 0.30: # 30% chance per check
         event_key = random.choice(list(COSMIC_EVENTS.keys()))
@@ -993,7 +993,7 @@ class Game:
         self.alliances[user_id2] = {'ally': user_id1, 'turns_left': ALLIANCE_DURATION}
         logger.info(f"🤝 Alliance formed: {user_id1} <-> {user_id2} ({ALLIANCE_DURATION} turns)")
 
-    def break_alliance(self, user_id: int) -> int | None:
+    def break_alliance(self, user_id: int) -> Union[int, None]:
         """Removes alliance entries involving the user. Returns the former ally ID."""
         former_ally_id = None
         alliance_info = self.alliances.pop(user_id, None) # Remove betrayer's entry
@@ -6192,4 +6192,3 @@ def main() -> None:
 # --- Entry Point ---
 if __name__ == '__main__':
     main()
-
