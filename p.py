@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 # 🚀 ======================== CONFIGURATION ======================== 🚀
 
 # --- Bot Token ---
-BOT_TOKEN = '8499954180:AAE8O1Q8iukvxCxjRiQbxE4GPxNntR2HrNg' # <<< 🔑 Replace with your Bot Token from BotFather
+BOT_TOKEN = '8318859222:AAHQAINsicVy2I6Glu6Hj_d57pIIghGUnUU' # <<< 🔑 Replace with your Bot Token from BotFather
 
 # --- User IDs ---
 OWNER_ID = 7460266461 # 👑 The Bot Owner (Full Access)
@@ -6192,3 +6192,4 @@ def main() -> None:
 # --- Entry Point ---
 if __name__ == '__main__':
     main()
+
