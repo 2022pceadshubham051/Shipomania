@@ -10,6 +10,7 @@ from telegram.error import TelegramError, Forbidden, BadRequest
 from collections import defaultdict
 import json
 import os
+from typing import Union
 # Import necessary classes for media handling
 from telegram import InputMediaAnimation, InputMediaPhoto
 
@@ -29,7 +30,7 @@ logger = logging.getLogger(__name__)
 # 🚀 ======================== CONFIGURATION ======================== 🚀
 
 # --- Bot Token ---
-BOT_TOKEN = '8318859222:AAHQAINsicVy2I6Glu6Hj_d57pIIghGUnUU' # <<< 🔑 Replace with your Bot Token from BotFather
+BOT_TOKEN = '8499954180:AAE8O1Q8iukvxCxjRiQbxE4GPxNntR2HrNg' # <<< 🔑 Replace with your Bot Token from BotFather
 
 # --- User IDs ---
 OWNER_ID = 7460266461 # 👑 The Bot Owner (Full Access)
@@ -456,8 +457,7 @@ def escape_markdown_value(text: any) -> str:
     escape_chars = r'_*[]()~`>#+-=|{}.!'
     # Prepend each special character with a backslash
     return ''.join(f'\\{char}' if char in escape_chars else char for char in text)
-
-def format_user_stats(stats_tuple: tuple | None) -> str:
+def format_user_stats(stats_tuple: Union[tuple, None]) -> str:
     """Formats the player stats tuple into a fancy, readable string."""
     fancy_separator = "✨ • -------------------- • ✨" # Define a fancy separator
 
@@ -710,7 +710,7 @@ async def pin_message(context: ContextTypes.DEFAULT_TYPE, chat_id: int, message_
     except Exception as e:
         logger.error(f"❌ Unexpected error pinning message: {e}", exc_info=True)
 
-def trigger_cosmic_event() -> tuple[str | None, dict | None]:
+def trigger_cosmic_event() -> tuple[str , None, dict , None]:
     """Randomly determines if a cosmic event should trigger."""
     if random.random() < 0.30: # 30% chance per check
         event_key = random.choice(list(COSMIC_EVENTS.keys()))
@@ -731,15 +731,15 @@ class Game:
         self.chat_id: int = chat_id
         self.creator_id: int = creator_id
         self.creator_name: str = creator_name
-        self.mode: str | None = None          # 'solo' or 'team'
+        self.mode: Union[str, None] = None          # 'solo' or 'team'
         self.players: dict[int, dict] = {}   # {user_id: player_data}
         self.spectators: set[int] = set()    # {user_id}
         self.day: int = 0                     # Game round counter
-        self.joining_message_id: int | None = None # Message with Join/Team buttons
+        self.joining_message_id: Union[int, None] = None # Message with Join/Team buttons
         self.is_joining: bool = False         # True during player join phase
         self.is_active: bool = False          # True during active battle rounds
-        self.join_end_time: datetime | None = None
-        self.operation_end_time: datetime | None = None
+        self.join_end_time: Union[datetime, None] = None
+        self.operation_end_time: Union[datetime, None] = None
         self.settings: dict = self.load_settings() # Load settings from DB for this group
         self.start_time: datetime = datetime.now()
 
@@ -749,8 +749,8 @@ class Game:
         self.operations_log: list[str] = [] # Log actions for summary
 
         # Event tracking
-        self.active_event: str | None = None
-        self.event_effect: dict | None = None
+        self.active_event: Union[str, None] = None
+        self.event_effect: Union[dict, None] = None
 
         # Map state
         self.map_type: str = 'classic' # Default map
@@ -770,7 +770,7 @@ class Game:
         # Voting state
         self.map_votes: dict[int, str] = {} # {user_id: map_key}
         self.map_voting: bool = False
-        self.map_vote_end_time: datetime | None = None
+        self.map_vote_end_time: Union[datetime, None] = None
 
         # Alliance state
         self.alliances: dict[int, dict] = {} # {user_id: {'ally': ally_id, 'turns_left': int}}
@@ -812,7 +812,7 @@ class Game:
         self.safe_zone_current_phase = 0
         logger.info(f"🗺️ Map set to '{map_key}' ({self.map_size}x{self.map_size}) for game in chat {self.chat_id}")
 
-    def add_player(self, user_id: int, username: str, first_name: str, team: str | None = None) -> tuple[bool, str]:
+    def add_player(self, user_id: int, username: str, first_name: str, team: Union[str, None] = None) -> tuple[bool, str]:
         """Adds a player to the game if possible."""
         if len(self.players) >= self.settings['max_players']:
             return False, f"🚫 Fleet is full! Max capacity: {self.settings['max_players']} captains."
@@ -1024,7 +1024,7 @@ class Game:
             if removed_count > 0:
                 logger.info(f"⏳ Alliance expired between {u1} and {u2}")
 
-    def update_safe_zone(self) -> str | None:
+    def update_safe_zone(self) -> Union[str, None]:
         """Checks schedule and shrinks safe zone if needed. Returns log message."""
         log_msg = None
         if self.day in SAFE_ZONE_SCHEDULE:
@@ -1132,7 +1132,7 @@ def set_player_coins(user_id: int, amount: int) -> int:
         if conn: conn.close()
     return final_amount
 
-def get_player_stats(user_id: int) -> tuple | None:
+def get_player_stats(user_id: int) -> Union[tuple, None]:
     """Retrieves all player stats as a tuple from the database, performing validation."""
     conn = None
     stats_tuple = None
@@ -1180,7 +1180,7 @@ def get_player_stats(user_id: int) -> tuple | None:
     return stats_tuple
 
 
-def update_player_stats(user_id: int, username: str | None, stats_update: dict):
+def update_player_stats(user_id: int, username: Union[str, None], stats_update: dict):
     """Updates player stats in the database. Creates player if not exists."""
     conn = None
     safe_username = username or f"User_{user_id}" # Ensure a username exists
@@ -1332,7 +1332,7 @@ def get_leaderboard(limit: int = 10) -> list[tuple]:
         if conn: conn.close()
     return results
 
-def get_player_stats_by_username(username: str) -> tuple | None:
+def get_player_stats_by_username(username: str) -> Union[tuple, None]:
     """Retrieves player stats tuple by searching for username (case-insensitive)."""
     conn = None
     stats_tuple = None
@@ -3442,7 +3442,7 @@ async def show_move_selection(query: Update.callback_query, context: ContextType
         await query.edit_message_caption(caption=move_prompt, reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
     except BadRequest: pass # Ignore if not modified
 
-async def set_operation(query: Update.callback_query, context: ContextTypes.DEFAULT_TYPE, game: Game, user_id: int, operation: str, target_id: int | None, chat_id: int):
+async def set_operation(query: Update.callback_query, context: ContextTypes.DEFAULT_TYPE, game: Game, user_id: int, operation: str, target_id: Union[int, None], chat_id: int):
     """Confirms the chosen action and updates the DM (Fancy UI)."""
     player = game.players[user_id]
     player['operation'] = operation
@@ -6192,4 +6192,3 @@ def main() -> None:
 # --- Entry Point ---
 if __name__ == '__main__':
     main()
-
